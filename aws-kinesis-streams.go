@@ -40,7 +40,7 @@ type KinesisStreamsPlugin struct {
 // MetricKeyPrefix interface for PluginWithPrefix
 func (p KinesisStreamsPlugin) MetricKeyPrefix() string {
 	if p.Prefix == "" {
-		p.Prefix = "kinesis"
+		p.Prefix = "kinesis-streams"
 	}
 	return p.Prefix
 }
@@ -148,6 +148,7 @@ func (p KinesisStreamsPlugin) FetchMetrics() (map[string]interface{}, error) {
 // GraphDefinition of KinesisStreamsPlugin
 func (p KinesisStreamsPlugin) GraphDefinition() map[string](mp.Graphs) {
 	labelPrefix := strings.Title(p.Prefix)
+	labelPrefix = strings.Replace(labelPrefix, "-", " ", -1)
 
 	var graphdef = map[string](mp.Graphs){
 		"bytes": mp.Graphs{
@@ -213,7 +214,7 @@ func main() {
 	optRegion := flag.String("region", "", "AWS Region")
 	optIdentifier := flag.String("identifier", "", "Stream Name")
 	optTempfile := flag.String("tempfile", "", "Temp file name")
-	optPrefix := flag.String("metric-key-prefix", "kinesis-stream", "Metric key prefix")
+	optPrefix := flag.String("metric-key-prefix", "kinesis-streams", "Metric key prefix")
 	flag.Parse()
 
 	var plugin KinesisStreamsPlugin
