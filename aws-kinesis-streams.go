@@ -146,15 +146,15 @@ func (p KinesisStreamsPlugin) FetchMetrics() (map[string]interface{}, error) {
 }
 
 // GraphDefinition of KinesisStreamsPlugin
-func (p KinesisStreamsPlugin) GraphDefinition() map[string](mp.Graphs) {
+func (p KinesisStreamsPlugin) GraphDefinition() map[string]mp.Graphs {
 	labelPrefix := strings.Title(p.Prefix)
 	labelPrefix = strings.Replace(labelPrefix, "-", " ", -1)
 
-	var graphdef = map[string](mp.Graphs){
+	var graphdef = map[string]mp.Graphs{
 		"bytes": mp.Graphs{
 			Label: (labelPrefix + " Bytes"),
 			Unit:  "integer",
-			Metrics: [](mp.Metrics){
+			Metrics: []mp.Metrics{
 				mp.Metrics{Name: "GetRecordsBytes", Label: "GetRecords"},
 				mp.Metrics{Name: "IncomingBytes", Label: "Total Incoming"},
 				mp.Metrics{Name: "PutRecordBytes", Label: "PutRecord"},
@@ -164,7 +164,7 @@ func (p KinesisStreamsPlugin) GraphDefinition() map[string](mp.Graphs) {
 		"iteratorage": mp.Graphs{
 			Label: (labelPrefix + " Read Delay"),
 			Unit:  "integer",
-			Metrics: [](mp.Metrics){
+			Metrics: []mp.Metrics{
 				mp.Metrics{Name: "GetRecordsDelayMaxMilliseconds", Label: "Max"},
 				mp.Metrics{Name: "GetRecordsDelayMinMilliseconds", Label: "min"},
 			},
@@ -172,7 +172,7 @@ func (p KinesisStreamsPlugin) GraphDefinition() map[string](mp.Graphs) {
 		"latency": mp.Graphs{
 			Label: (labelPrefix + " Operation Latency"),
 			Unit:  "integer",
-			Metrics: [](mp.Metrics){
+			Metrics: []mp.Metrics{
 				mp.Metrics{Name: "GetRecordsLatency", Label: "GetRecords"},
 				mp.Metrics{Name: "PutRecordLatency", Label: "PutRecord"},
 				mp.Metrics{Name: "PutRecordsLatency", Label: "PutRecords"},
@@ -181,7 +181,7 @@ func (p KinesisStreamsPlugin) GraphDefinition() map[string](mp.Graphs) {
 		"records": mp.Graphs{
 			Label: (labelPrefix + " Records"),
 			Unit:  "integer",
-			Metrics: [](mp.Metrics){
+			Metrics: []mp.Metrics{
 				mp.Metrics{Name: "GetRecordsRecords", Label: "GetRecords"},
 				mp.Metrics{Name: "IncomingRecords", Label: "Total Incoming"},
 				mp.Metrics{Name: "PutRecordsRecords", Label: "PutRecords"},
@@ -190,7 +190,7 @@ func (p KinesisStreamsPlugin) GraphDefinition() map[string](mp.Graphs) {
 		"success": mp.Graphs{
 			Label: (labelPrefix + " Operation Success"),
 			Unit:  "integer",
-			Metrics: [](mp.Metrics){
+			Metrics: []mp.Metrics{
 				mp.Metrics{Name: "GetRecordsSuccess", Label: "GetRecords"},
 				mp.Metrics{Name: "PutRecordSuccess", Label: "PutRecord"},
 				mp.Metrics{Name: "PutRecordsSuccess", Label: "PutRecords"},
@@ -199,7 +199,7 @@ func (p KinesisStreamsPlugin) GraphDefinition() map[string](mp.Graphs) {
 		"pending": mp.Graphs{
 			Label: (labelPrefix + " Pending Operations"),
 			Unit:  "integer",
-			Metrics: [](mp.Metrics){
+			Metrics: []mp.Metrics{
 				mp.Metrics{Name: "ReadThroughputExceeded", Label: "Read"},
 				mp.Metrics{Name: "WriteThroughputExceeded", Label: "Write"},
 			},
