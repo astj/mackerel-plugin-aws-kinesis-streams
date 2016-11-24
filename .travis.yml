@@ -1,0 +1,18 @@
+language: go
+go:
+- 1.7.3
+before_deploy:
+- go get -u github.com/laher/goxc
+- mkdir -p $TRAVIS_BUILD_DIR/dist
+- goxc -d=$TRAVIS_BUILD_DIR/dist -bc=darwin -tasks=clean-destination,xc,archive,rmbin
+deploy:
+  provider: releases
+  skip_cleanup: true
+  api_key:
+    secure: c+SN/wbhO+xvafXda/sVHuIpuGlMHVVwucm2gCluO9hX7MGqB37goeWuj8030P2srGsGJ3mQU+CUtaKvZ2btva+TWoZ65g98dlk/xQcSLAB0x5/T0cdimMHkVxqQcN+xpsHnnBrACuqgoboRGIl12dqqEZWRgMkPhtVB7TFuRjhG5YZF+PcZ9PxRj/7K0Pfq3ZirFov4j6B78YjVZaFNJDa3Qmoo5zjQmrrH71yceeMhvwDQ2rJw2iesYNDbJtMOyJTyhnn0W7wbv9Ek5POzDd360SgLokbtdHbjGjAnvsr02OENvjXK/r8WfPDxwhxJOyIPpFfoNVvz349QJpcmtaqrBTlaB196LAifybSFkHdwdgLnzSFbRMKJqsfyH/wR2XkTwj/KFSLY5vj2diRPINhCNDpN0I0pzqe2Xd2Mo1PbjP1AMRiKUCl4bhKVe9z8oggkXqoo9SB0iqKVUNyZ4SHo5D0dzgIMrQEKaSUcfQdnarstHdP33JtMDiReIzHKhr++78X2TRsFwT0XICckK4FkPx2ULO+2MQqDAQdgRhbVNlZXR2DDKly/atZBBUgCwVS08pmbIHpjzhYbBh8MKdaAv61cU4E3A9jCKI9H81KeutZHTBlw5tD/K4XwGcQKkHQ/7yXSC7Qa2IWi4+it6cvrYpTowU2Yu7hxbblH4Sw=
+  file_glob: true
+  file: "$TRAVIS_BUILD_DIR/dist/**/*.{tar.gz,zip}"
+  on:
+    repo: astj/mackerel-plugin-aws-kinesis-streams
+    tags: true
+    condition: "$TRAVIS_TAG =~ ^v[0-9].*$"
