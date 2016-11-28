@@ -151,57 +151,57 @@ func (p KinesisStreamsPlugin) GraphDefinition() map[string]mp.Graphs {
 	labelPrefix = strings.Replace(labelPrefix, "-", " ", -1)
 
 	var graphdef = map[string]mp.Graphs{
-		"bytes": mp.Graphs{
+		"bytes": {
 			Label: (labelPrefix + " Bytes"),
 			Unit:  "integer",
 			Metrics: []mp.Metrics{
-				mp.Metrics{Name: "GetRecordsBytes", Label: "GetRecords"},
-				mp.Metrics{Name: "IncomingBytes", Label: "Total Incoming"},
-				mp.Metrics{Name: "PutRecordBytes", Label: "PutRecord"},
-				mp.Metrics{Name: "PutRecordsBytes", Label: "PutRecords"},
+				{Name: "GetRecordsBytes", Label: "GetRecords"},
+				{Name: "IncomingBytes", Label: "Total Incoming"},
+				{Name: "PutRecordBytes", Label: "PutRecord"},
+				{Name: "PutRecordsBytes", Label: "PutRecords"},
 			},
 		},
-		"iteratorage": mp.Graphs{
+		"iteratorage": {
 			Label: (labelPrefix + " Read Delay"),
 			Unit:  "integer",
 			Metrics: []mp.Metrics{
-				mp.Metrics{Name: "GetRecordsDelayMaxMilliseconds", Label: "Max"},
-				mp.Metrics{Name: "GetRecordsDelayMinMilliseconds", Label: "min"},
+				{Name: "GetRecordsDelayMaxMilliseconds", Label: "Max"},
+				{Name: "GetRecordsDelayMinMilliseconds", Label: "min"},
 			},
 		},
-		"latency": mp.Graphs{
+		"latency": {
 			Label: (labelPrefix + " Operation Latency"),
 			Unit:  "integer",
 			Metrics: []mp.Metrics{
-				mp.Metrics{Name: "GetRecordsLatency", Label: "GetRecords"},
-				mp.Metrics{Name: "PutRecordLatency", Label: "PutRecord"},
-				mp.Metrics{Name: "PutRecordsLatency", Label: "PutRecords"},
+				{Name: "GetRecordsLatency", Label: "GetRecords"},
+				{Name: "PutRecordLatency", Label: "PutRecord"},
+				{Name: "PutRecordsLatency", Label: "PutRecords"},
 			},
 		},
-		"records": mp.Graphs{
+		"records": {
 			Label: (labelPrefix + " Records"),
 			Unit:  "integer",
 			Metrics: []mp.Metrics{
-				mp.Metrics{Name: "GetRecordsRecords", Label: "GetRecords"},
-				mp.Metrics{Name: "IncomingRecords", Label: "Total Incoming"},
-				mp.Metrics{Name: "PutRecordsRecords", Label: "PutRecords"},
+				{Name: "GetRecordsRecords", Label: "GetRecords"},
+				{Name: "IncomingRecords", Label: "Total Incoming"},
+				{Name: "PutRecordsRecords", Label: "PutRecords"},
 			},
 		},
-		"success": mp.Graphs{
+		"success": {
 			Label: (labelPrefix + " Operation Success"),
 			Unit:  "integer",
 			Metrics: []mp.Metrics{
-				mp.Metrics{Name: "GetRecordsSuccess", Label: "GetRecords"},
-				mp.Metrics{Name: "PutRecordSuccess", Label: "PutRecord"},
-				mp.Metrics{Name: "PutRecordsSuccess", Label: "PutRecords"},
+				{Name: "GetRecordsSuccess", Label: "GetRecords"},
+				{Name: "PutRecordSuccess", Label: "PutRecord"},
+				{Name: "PutRecordsSuccess", Label: "PutRecords"},
 			},
 		},
-		"pending": mp.Graphs{
+		"pending": {
 			Label: (labelPrefix + " Pending Operations"),
 			Unit:  "integer",
 			Metrics: []mp.Metrics{
-				mp.Metrics{Name: "ReadThroughputExceeded", Label: "Read"},
-				mp.Metrics{Name: "WriteThroughputExceeded", Label: "Write"},
+				{Name: "ReadThroughputExceeded", Label: "Read"},
+				{Name: "WriteThroughputExceeded", Label: "Write"},
 			},
 		},
 	}
