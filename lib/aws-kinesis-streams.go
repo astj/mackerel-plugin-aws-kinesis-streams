@@ -7,8 +7,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/crowdmob/goamz/aws"
-	"github.com/crowdmob/goamz/cloudwatch"
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/credentials"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/cloudwatch"
 	mp "github.com/mackerelio/go-mackerel-plugin-helper"
 )
 
@@ -47,15 +49,20 @@ func (p KinesisStreamsPlugin) MetricKeyPrefix() string {
 
 // prepare creates CloudWatch instance
 func (p *KinesisStreamsPlugin) prepare() error {
-	auth, err := aws.GetAuth(p.AccessKeyID, p.SecretAccessKey, "", time.Now())
+	sess, err := session.NewSession()
 	if err != nil {
 		return err
 	}
 
-	p.CloudWatch, err = cloudwatch.NewCloudWatch(auth, aws.Regions[p.Region].CloudWatchServicepoint)
-	if err != nil {
-		return err
+	config := aws.NewConfig()
+	if p.AccessKeyID != "" && p.SecretAccessKey != "" {
+		config = config.WithCredentials(credentials.NewStaticCredentials(p.AccessKeyID, p.SecretAccessKey, ""))
 	}
+	if p.Region != "" {
+		config = config.WithRegion(p.Region)
+	}
+
+	p.CloudWatch = cloudwatch.New(sess, config)
 
 	return nil
 }
@@ -64,48 +71,48 @@ func (p *KinesisStreamsPlugin) prepare() error {
 func (p KinesisStreamsPlugin) getLastPoint(metric metrics) (float64, error) {
 	now := time.Now()
 
-	dimensions := []cloudwatch.Dimension{
+	dimensions := []*cloudwatch.Dimension{
 		{
-			Name:  "StreamName",
-			Value: p.Name,
+			Name:  aws.String("StreamName"),
+			Value: aws.String(p.Name),
 		},
 	}
 
-	response, err := p.CloudWatch.GetMetricStatistics(&cloudwatch.GetMetricStatisticsRequest{
+	response, err := p.CloudWatch.GetMetricStatistics(&cloudwatch.GetMetricStatisticsInput{
 		Dimensions: dimensions,
-		StartTime:  now.Add(time.Duration(180) * time.Second * -1), // 3 min
-		EndTime:    now,
-		MetricName: metric.CloudWatchName,
-		Period:     60,
-		Statistics: []string{metric.Type},
-		Namespace:  namespace,
+		StartTime:  aws.Time(now.Add(time.Duration(180) * time.Second * -1)), // 3 min
+		EndTime:    aws.Time(now),
+		MetricName: aws.String(metric.CloudWatchName),
+		Period:     aws.Int64(60),
+		Statistics: []*string{aws.String(metric.Type)},
+		Namespace:  aws.String(namespace),
 	})
 	if err != nil {
 		return 0, err
 	}
 
-	datapoints := response.GetMetricStatisticsResult.Datapoints
+	datapoints := response.Datapoints
 	if len(datapoints) == 0 {
 		return 0, errors.New("fetched no datapoints")
 	}
 
-	latest := time.Unix(0, 0)
+	latest := new(time.Time)
 	var latestVal float64
 	for _, dp := range datapoints {
-		if dp.Timestamp.Before(latest) {
+		if dp.Timestamp.Before(*latest) {
 			continue
 		}
 
 		latest = dp.Timestamp
 		switch metric.Type {
 		case metricsTypeAverage:
-			latestVal = dp.Average
+			latestVal = *dp.Average
 		case metricsTypeSum:
-			latestVal = dp.Sum
+			latestVal = *dp.Sum
 		case metricsTypeMaximum:
-			latestVal = dp.Maximum
+			latestVal = *dp.Maximum
 		case metricsTypeMinimum:
-			latestVal = dp.Minimum
+			latestVal = *dp.Minimum
 		}
 	}
 
