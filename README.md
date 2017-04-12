@@ -3,6 +3,11 @@ mackerel-plugin-aws-kinesis-streams
 
 AWS Kinesis Streams custom metrics plugin for mackerel.io agent.
 
+## DEPRECATED
+
+This plugin is now part of [Official Mackerel Agent Plugins](https://github.com/mackerelio/mackerel-agent-plugins/tree/master/mackerel-plugin-aws-kinesis-streams).
+Please use official plugins, not this repository.
+
 ## Synopsis
 
 ```shell
